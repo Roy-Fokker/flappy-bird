@@ -1,0 +1,98 @@
+{
+	"version": 3,
+	"cmakeMinimumRequired": {
+		"major": 3,
+		"minor": 21,
+		"patch": 0
+	},
+	"configurePresets": [
+		{
+			"name": "ninja-multi-vcpkg",
+			"displayName": "Ninja Multi-Config",
+			"description": "Configure with vcpkg toolchain and generate Ninja project files for all configurations",
+			"hidden": true,
+			"binaryDir": "${sourceDir}/builds/${presetName}",
+			"installDir": "${sourceDir}/install/${presetName}",
+			"generator": "Ninja Multi-Config",
+			"cacheVariables": {
+				"CMAKE_TOOLCHAIN_FILE": {
+					"value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+					"type": "FILEPATH"
+				}
+			}
+		},
+		{
+			"name": "msvc-x64-compliance",
+			"displayName": "MS Visual C++ x64 configuration",
+			"hidden": true,
+			
+			"architecture": {
+				"value": "x64",
+				"strategy": "external"
+			},
+			"toolset": {
+				"value": "host=x64",
+				"strategy": "external"
+			},
+			"cacheVariables": {
+				"CMAKE_CXX_COMPILER": "cl.exe",
+				"CMAKE_C_COMPILER": "cl.exe",
+				"CMAKE_CXX_FLAGS": "/utf-8 /W4 /permissive- /volatile:iso /Zc:preprocessor /EHsc /Zc:__cplusplus /Zc:externConstexpr /Zc:throwingNew"
+			}
+		},
+		{
+			"name": "Windows-Default",
+			"displayName": "Windows x64 Build",
+			"inherits":[
+				"ninja-multi-vcpkg",
+				"msvc-x64-compliance"
+			]
+		},
+		{
+			"name": "Linux-Default",
+			"displayName": "Linux Build",
+			"inherits":[
+				"ninja-multi-vcpkg"
+			]
+		}
+	],
+	"buildPresets": [
+		{
+			"name": "windows-debug",
+			"configurePreset": "Windows-Default",
+			"displayName": "Windows Debug",
+			"description": "Build using ninja multi vcpkg debug configuration for windows",
+			"configuration": "Debug"
+		},
+		{
+			"name": "windows-release",
+			"configurePreset": "Windows-Default",
+			"displayName": "Windows Release",
+			"description": "Build using ninja multi vcpkg release configuration for windows",
+			"configuration": "Release"
+		},
+		{
+			"name": "windows-relwithdebinfo",
+			"configurePreset": "Windows-Default",
+			"displayName": "Windows RelWithDebInfo",
+			"description": "Build using ninja multi vcpkg relwithdebinfo configuration for windows",
+			"configuration": "RelWithDebInfo"
+		}
+	],
+	"testPresets": [
+		{
+			"name": "windows-debug",
+			"configurePreset": "Windows-Default",
+			"displayName": "Windows Debug",
+			"description": "Test using ninja multi vcpkg debug configuration for windows",
+			"configuration": "Debug"
+		},
+		{
+			"name": "windows-relwithdebinfo",
+			"configurePreset": "Windows-Default",
+			"displayName": "Windows RelWithDebInfo",
+			"description": "Test using ninja multi vcpkg relwithdebinfo configuration for windows",
+			"configuration": "RelWithDebInfo"
+		}
+	]
+}
